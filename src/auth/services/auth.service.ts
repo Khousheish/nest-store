@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { JwtPayload } from '@Auth/jwt-payload.interface';
+import { User } from '@Auth/user.entity';
 
 import { AuthCredentialsDto } from '../dtos/auth-credentials.dto';
 import { UserRepository } from '../user.repository';
@@ -19,13 +20,16 @@ export class AuthService {
   }
 
   public async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string; }> {
-    const username: string = await this.userRepository.validateUserPassword(authCredentialsDto);
+    const user: User = await this.userRepository.validateUserPassword(authCredentialsDto);
 
-    if (!username) {
+    if (!user.username) {
       throw new UnauthorizedException('Invalid Credentials');
     }
 
-    const payload: JwtPayload = { username };
+    const payload: JwtPayload = {
+      username: user.username,
+      role: user.role,
+    };
     const accessToken: string = this.jwtService.sign(payload);
 
     this.logger.debug(`Generated JWT Token with payload ${JSON.stringify(payload)}`);

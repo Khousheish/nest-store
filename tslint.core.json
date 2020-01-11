@@ -220,7 +220,7 @@
         "groups": [
           {
             "name": "External resources",
-            "match": "^(@?(nestjs|rxjs|supertest|typeorm|class-validator))",
+            "match": "^(@?(nestjs|rxjs|supertest|typeorm|class-validator|bcrypt))",
             "order": 10
           },
           {
